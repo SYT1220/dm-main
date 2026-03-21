@@ -1,0 +1,36 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dm?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: mwHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+ai:
+  service:
+    api-key: sk-ffb3d6865fb84e0b809afdc543f53adb
+    api-url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+    model: qwen-plus
+
+# 百度 AI 人脸识别配置
+baidu:
+  face:
+    app-id: 7540385
+    api-key: ENRa2Qlb0eTnDew5gcPp4xEd
+    secret-key: ujSLSIQn3vZJpkLeDcZtCkrDQrwb0gAU
+    threshold: 80

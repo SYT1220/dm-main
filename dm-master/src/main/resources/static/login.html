@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="keywords" content="学生入住信息管理系统">
+    <title>学生入住信息管理系统 - 请登录</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="bookmark" href="favicon.ico"/>
+    <link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap-grid.min.css">
+    <link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap-reboot.min.css">
+    <link type="text/css" rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="css/login.css">
+
+    <script type="text/javascript" language="JavaScript">
+        $(function(){
+            localStorage.setItem("account", '');
+            localStorage.setItem("type", '');
+        });
+    </script>
+</head>
+<body>
+<header id="header">
+    <h2>学生入住信息管理系统</h2>
+</header>
+<div id="loginWrapper">
+    <div id="loginform" class="card col-sm-5">
+        <div class="card-header">
+            <h3 align="center">欢迎使用</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="form-group input-group">
+                    <span class="input-group-addon col-sm-2"><i class="fa fa-user fa-fw fa-2x"></i></span>
+                    <input id="account" class="form-control col-sm-6" type="text" placeholder="请输入账号"
+                           onblur="checkInputInfoNull('account')">
+                    <div id="accountCheckInfo" class="col-sm-4 checkinfo"></div>
+                </div>
+                <div class="form-group input-group">
+                    <span class="input-group-addon col-sm-2"><i class="fa fa-lock fa-fw fa-2x"></i></span>
+                    <input id="password" class="form-control col-sm-6" type="password" placeholder="请输入密码"
+                           onblur="checkInputInfoNull('password')">
+                    <div id="passwordCheckInfo" class="col-sm-4 checkinfo"></div>
+                </div>
+                <div class="form-group input-group">
+                    <span class="input-group-addon col-sm-2"></span>
+                    <input id="captcha" class="form-control col-sm-6" type="text" placeholder="请输入验证码">
+                    <div class="col-sm-4">
+                        <button id="captchaButton" οnclick="initCaptcha()"><img id="captchaImg" width="100%"
+                                                                                height="100%" loading="lazy"
+                                                                                src='/captcha'></button>
+                    </div>
+                </div>
+                <div class="form-group input-group">
+                    <div class="radio-box col-sm-4">
+                        <input type="radio" id="radio-1" name="type" value="3"/>
+                        <label for="radio-1">学生</label>
+                    </div>
+                    <div class="radio-box col-sm-4">
+                        <input type="radio" id="radio-2" name="type" value="2"/>
+                        <label for="radio-2">辅导员</label>
+                    </div>
+                    <div class="radio-box col-sm-4">
+                        <input type="radio" id="radio-3" name="type" value="1"/>
+                        <label for="radio-3">管理员</label>
+                    </div>
+                </div>
+
+                <div class="form-group input-group text-center">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-success col-sm-12" onclick="showFaceLogin()">
+                            <i class="fa fa-camera"></i> 人脸识别登录
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="col-sm-1">&nbsp;</div>
+                    <button type="button" class="btn btn-info col-sm-4" onclick="login()"><i
+                            class="fa fa-arrow-right"></i> 登&nbsp;陆
+                    </button>
+                    <div class="col-sm-2"></div>
+                    <button type="reset" class="btn btn-danger col-sm-4"><i class="fa fa-rotate-left"></i> 重&nbsp;置
+                    </button>
+                    <div class="col-sm-1">&nbsp;</div>
+                </div>
+
+                <div class="form-group input-group text-center mt-2">
+                    <div class="col-sm-12">
+                        <a href="#" onclick="showFaceRegister(); return false;" style="color: #17a2b8;">
+                            <i class="fa fa-user-plus"></i> 人脸注册
+                        </a>
+                        <span style="color: #999; margin-left: 10px;">（注册后可直接使用人脸识别登录）</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 人脸识别登录模态框 -->
+<div id="faceLoginModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">人脸识别登录</h4>
+            </div>
+            <div class="modal-body text-center">
+                <div class="form-group">
+                    <label>请选择用户类型：</label>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary active" id="faceLoginType3" onclick="selectFaceLoginType('3')">学生</button>
+                        <button type="button" class="btn btn-outline-primary" id="faceLoginType2" onclick="selectFaceLoginType('2')">辅导员</button>
+                        <button type="button" class="btn btn-outline-primary" id="faceLoginType1" onclick="selectFaceLoginType('1')">管理员</button>
+                    </div>
+                </div>
+                <video id="video" width="400" height="300" autoplay></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <div id="facePreview" style="margin-top:10px;"></div>
+                <div id="faceStatus" class="mt-2"></div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" onclick="captureFace()">
+                        <i class="fa fa-camera"></i> 拍照识别
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="startCamera()">
+                        <i class="fa fa-refresh"></i> 重试
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 人脸注册模态框 -->
+<div id="faceRegisterModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">人脸注册</h4>
+            </div>
+            <div class="modal-body text-center">
+                <div class="form-group">
+                    <label>请选择用户类型：</label>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-success active" id="faceRegType3" onclick="selectFaceRegType('3')">学生</button>
+                        <button type="button" class="btn btn-outline-success" id="faceRegType2" onclick="selectFaceRegType('2')">辅导员</button>
+                        <button type="button" class="btn btn-outline-success" id="faceRegType1" onclick="selectFaceRegType('1')">管理员</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="regAccount" class="form-control" type="text" placeholder="请输入账号" style="max-width:300px;margin:10px auto;">
+                </div>
+                <video id="regVideo" width="400" height="300" autoplay></video>
+                <canvas id="regCanvas" style="display:none;"></canvas>
+                <div id="regFacePreview" style="margin-top:10px;"></div>
+                <div id="regFaceStatus" class="mt-2"></div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-success" onclick="captureFaceForRegister()">
+                        <i class="fa fa-camera"></i> 拍照注册
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="startRegCamera()">
+                        <i class="fa fa-refresh"></i> 重试
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer id="footer">
+    <h4>武汉工程大学<i class="fa fa-copyright"></i></h4>
+</footer>
+<script type="text/javascript" language="JavaScript" src="jquery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="bootstrap/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="js/login.js"></script>
+</body>
+</html>
